@@ -3,8 +3,9 @@
  * Merge parent .do/base.yaml with each submodule's .do/component.yaml
  * into .do/app.yaml (the App Platform create/update source of truth).
  *
- * Fragment keys merged from components: services, static_sites, jobs, workers, functions
- * Parent base owns: name, region, features, alerts, ingress, databases, envs, …
+ * Fragment keys merged from components: services, static_sites, jobs, databases,
+ * workers, functions. (mars-demo-db owns databases + db-migrate job.)
+ * Parent base owns: name, region, features, alerts, ingress, …
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -19,6 +20,7 @@ const COMPONENT_KEYS = [
   "services",
   "static_sites",
   "jobs",
+  "databases",
   "workers",
   "functions",
 ];

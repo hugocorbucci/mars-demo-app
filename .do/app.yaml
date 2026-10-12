@@ -20,11 +20,6 @@ ingress:
       match:
         path:
           prefix: /
-databases:
-  - name: db
-    engine: PG
-    version: '16'
-    production: false
 static_sites:
   - name: web
     github:
@@ -86,3 +81,8 @@ jobs:
       - key: DATABASE_URL
         scope: RUN_TIME
         value: ${db.DATABASE_URL}
+databases:
+  - name: db
+    engine: PG
+    version: '16'
+    production: false

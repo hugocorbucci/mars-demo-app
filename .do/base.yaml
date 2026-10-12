@@ -3,6 +3,7 @@
 # and are merged by scripts/compose-app-spec.mjs into .do/app.yaml.
 #
 # Region slug: tor (Toronto). App Platform data center: tor1 — demo AIDP/MARS pipelines.
+# Managed databases are owned by mars-demo-db (.do/component.yaml), not here.
 name: mars-demo
 region: tor
 features:
@@ -22,9 +23,3 @@ ingress:
       match:
         path:
           prefix: /
-databases:
-  # Dev managed Postgres attached to this app (customer-like App Platform pattern).
-  - name: db
-    engine: PG
-    version: "16"
-    production: false
