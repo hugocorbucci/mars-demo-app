@@ -1,0 +1,16 @@
+{
+  "name": "mars-demo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Parent App Platform app: composes component fragments from git submodules",
+  "scripts": {
+    "compose": "node scripts/compose-app-spec.mjs",
+    "compose:check": "node scripts/compose-app-spec.mjs --check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

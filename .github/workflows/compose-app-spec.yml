@@ -1,0 +1,67 @@
+# Refresh component submodules to latest main, recompose .do/app.yaml, commit.
+name: compose-app-spec
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: Why this compose run was triggered
+        required: false
+        default: manual
+  schedule:
+    # Catch up if a child could not dispatch (missing PARENT_DISPATCH_TOKEN).
+    - cron: "*/30 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".do/base.yaml"
+      - "scripts/compose-app-spec.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - ".gitmodules"
+      - ".github/workflows/compose-app-spec.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install compose deps
+        run: npm ci
+
+      - name: Update submodules to origin/main
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote --merge
+          git submodule status
+
+      - name: Compose app spec
+        run: npm run compose
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .gitmodules components .do/app.yaml
+          if git diff --cached --quiet; then
+            echo "No submodule / spec changes"
+            exit 0
+          fi
+          reason="${{ github.event.inputs.reason || github.event_name }}"
+          git commit -m "chore: refresh submodules and compose app spec (${reason})"
+          git push origin HEAD:main

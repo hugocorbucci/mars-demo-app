@@ -1,0 +1,30 @@
+# Parent-only App Platform bits for Mars Demo Shop.
+# Component fragments live in submodule repos under components/*/ .do/component.yaml
+# and are merged by scripts/compose-app-spec.mjs into .do/app.yaml.
+#
+# Region: tor1 — demo AIDP/MARS pipelines are set up for Toronto.
+name: mars-demo
+region: tor1
+features:
+  - buildpack-stack=ubuntu-22
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+ingress:
+  rules:
+    - component:
+        name: api
+      match:
+        path:
+          prefix: /api
+    - component:
+        name: web
+      match:
+        path:
+          prefix: /
+databases:
+  # Dev managed Postgres attached to this app (customer-like App Platform pattern).
+  - name: db
+    engine: PG
+    version: "16"
+    production: false

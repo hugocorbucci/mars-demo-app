@@ -1,47 +1,50 @@
 # mars-demo-app
 
-Main App Platform repo for Hugo Corbucci’s **MARS acceptance demo** app.
+Parent repository for the **Mars Demo Shop** DigitalOcean App Platform demo (MARS acceptance scenarios).
 
-This repository owns the **app specification** and the wiring between components. Application code lives in sibling repos under `hugocorbucci`.
+App Platform app name: `mars-demo`  
+Region: **tor1** (demo pipelines)
 
 ## Layout
 
-| Piece | Repo | App Platform role |
-| --- | --- | --- |
-| App spec + ingress | **this repo** (`mars-demo-app`) | Source of truth for `doctl apps create/update` |
-| Static UI | [`mars-demo-ui`](https://github.com/hugocorbucci/mars-demo-ui) | `static_sites.web` |
-| API | [`mars-demo-api`](https://github.com/hugocorbucci/mars-demo-api) | `services.api` |
-| Schema / migrations | [`mars-demo-db`](https://github.com/hugocorbucci/mars-demo-db) | `jobs.db-migrate` (`PRE_DEPLOY`) + managed DB `databases.db` |
+| Path | Role |
+| --- | --- |
+| `.do/base.yaml` | Parent-only bits: name, region, ingress, databases, alerts |
+| `components/mars-demo-ui` | Git submodule → UI fragment `.do/component.yaml` |
+| `components/mars-demo-api` | Git submodule → API service fragment |
+| `components/mars-demo-db` | Git submodule → PRE_DEPLOY migrate job fragment |
+| `scripts/compose-app-spec.mjs` | Merges base + fragments → `.do/app.yaml` |
+| `.do/app.yaml` | **Generated** full App Platform spec (commit after compose) |
 
-## App spec
-
-- Path: [`.do/app.yaml`](.do/app.yaml)
-- App name: `mars-demo`
-- Region: `nyc`
-- Ingress: `/api` → API service, `/` → static UI
-- Managed DB: PostgreSQL 16 (dev database component named `db`)
-- Bindable env: API and migrate job receive `${db.DATABASE_URL}`
-
-## Deploy
-
-Prerequisites: DigitalOcean account, `doctl` authenticated, GitHub linked to App Platform, and the four `hugocorbucci/mars-demo-*` repos public (or DO GitHub app installed with access).
+## Compose locally
 
 ```bash
+git submodule update --init --recursive
+npm ci
+npm run compose          # write .do/app.yaml
+npm run compose:check    # fail if stale
+doctl apps spec validate .do/app.yaml
 doctl apps create --spec .do/app.yaml
-# later updates:
-doctl apps update <app-id> --spec .do/app.yaml
 ```
 
-Auto-deploy is enabled per component (`deploy_on_push: true`) so pushes to each component’s `main` trigger rebuilds.
+### How fragments merge
 
-## Demo failure scenarios (hooks for MARS)
+1. Load `.do/base.yaml` as the root document.
+2. For each submodule in `components/{mars-demo-ui,mars-demo-api,mars-demo-db}`, load `.do/component.yaml`.
+3. Append array keys `services`, `static_sites`, `jobs`, `workers`, `functions` from each fragment.
+4. Fragments may not set parent-owned keys (`name`, `region`, `databases`, …).
 
-Aligned with the Slack brief in `#tmp-insightsv2-aidc-mars-demo-hackathon`:
+## GitHub Actions
 
-1. **Bad deployment / crash after usage** — set `DEMO_CRASH_AFTER_REQUESTS` on the API component (e.g. `5`) so the process exits after N successful requests.
-2. **Latent DB bug** — migrations intentionally omit an index on a hot lookup column (`orders.customer_email`); the UI “Slow lookup” action exercises it.
-3. **Traffic stress** — UI “Load test” button hammers `/api/orders`; MARS can propose scaling / limits.
+| Workflow | Repo | Purpose |
+| --- | --- | --- |
+| `compose-app-spec` | this repo | Update submodules to latest `main`, run compose, commit `.do/app.yaml` |
+| `notify-parent-spec` | ui / api / db | On `.do/**` changes, `workflow_dispatch` the parent compose workflow |
 
-## Why multi-repo?
+Child → parent dispatch needs repo secret **`PARENT_DISPATCH_TOKEN`** (PAT with `repo` + `workflow` on `mars-demo-app`). Without it, the parent's 30‑minute schedule still refreshes submodules.
 
-Mirrors a common customer pattern: product UI, API, and DB ownership are separate, while one app-spec repo describes how App Platform assembles them.
+## Component repos
+
+- https://github.com/hugocorbucci/mars-demo-ui
+- https://github.com/hugocorbucci/mars-demo-api
+- https://github.com/hugocorbucci/mars-demo-db

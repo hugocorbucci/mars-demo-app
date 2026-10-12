@@ -1,0 +1,12 @@
+[submodule "components/mars-demo-ui"]
+	path = components/mars-demo-ui
+	url = https://github.com/hugocorbucci/mars-demo-ui.git
+	branch = main
+[submodule "components/mars-demo-api"]
+	path = components/mars-demo-api
+	url = https://github.com/hugocorbucci/mars-demo-api.git
+	branch = main
+[submodule "components/mars-demo-db"]
+	path = components/mars-demo-db
+	url = https://github.com/hugocorbucci/mars-demo-db.git
+	branch = main
