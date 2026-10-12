@@ -66,6 +66,15 @@ services:
       - key: DEMO_CRASH_AFTER_REQUESTS
         scope: RUN_TIME
         value: '0'
+      - key: DEMO_HANDLER_DELAY_MS
+        scope: RUN_TIME
+        value: '0'
+      - key: DEMO_MAX_INFLIGHT
+        scope: RUN_TIME
+        value: '0'
+      - key: DEMO_PG_POOL_MAX
+        scope: RUN_TIME
+        value: '5'
 databases:
   - name: db
     engine: PG

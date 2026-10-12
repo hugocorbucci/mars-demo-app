@@ -19,7 +19,8 @@ export API_URL      ?= http://127.0.0.1:$(PORT)
 COMPOSE := docker compose -f $(ROOT)/docker-compose.yml
 
 .PHONY: help submodules init compose compose-check \
-	install db-up db-down db-logs migrate \
+	install db-up db-down db-logs migrate seed \
+	stress-lookup stress-api \
 	api ui proxy dev stop \
 	validate-spec clean
 
@@ -71,6 +72,16 @@ db-logs: ## Tail Postgres logs
 migrate: ## Apply mars-demo-db migrations (needs db-up / DATABASE_URL)
 	cd $(DB) && npm install --silent
 	cd $(DB) && DATABASE_URL="$(DATABASE_URL)" PGSSL="$(PGSSL)" npm run migrate
+
+seed: ## Seed ~80k orders for missing-index congestion demo (local DB)
+	cd $(DB) && npm install --silent
+	cd $(DB) && DATABASE_URL="$(DATABASE_URL)" PGSSL="$(PGSSL)" COUNT="$${COUNT:-80000}" npm run seed
+
+stress-lookup: ## Hammer unindexed by-email (API_URL=… N=40)
+	node $(ROOT)/scripts/stress-lookup.mjs
+
+stress-api: ## Concurrent creates for scale demo (API_URL=… N=40)
+	node $(ROOT)/scripts/stress-api.mjs
 
 api: ## Run API on :$(PORT) (foreground)
 	cd $(API) && npm install --silent
