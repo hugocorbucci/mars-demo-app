@@ -72,6 +72,10 @@ Postgres is defined in [`docker-compose.yml`](docker-compose.yml). The local edg
 3. Append `services`, `static_sites`, `jobs`, `databases`, `workers`, `functions`.
 4. Managed DB config lives in **mars-demo-db** (not parent base).
 
+## Migrations (App Platform)
+
+Schema is **not** applied by an App Platform job. After the managed `db` exists, set secret `DATABASE_URL` on [`mars-demo-db`](https://github.com/mars-demo-app/mars-demo-db) and run workflow **`migrate`**. Locally use `make migrate`.
+
 ## App Platform / GitHub Actions
 
 ```bash
