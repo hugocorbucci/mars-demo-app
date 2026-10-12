@@ -23,7 +23,7 @@ ingress:
 static_sites:
   - name: web
     github:
-      repo: hugocorbucci/mars-demo-ui
+      repo: mars-demo-app/mars-demo-ui
       branch: main
       deploy_on_push: true
     environment_slug: html
@@ -37,7 +37,7 @@ static_sites:
 services:
   - name: api
     github:
-      repo: hugocorbucci/mars-demo-api
+      repo: mars-demo-app/mars-demo-api
       branch: main
       deploy_on_push: true
     environment_slug: node-js
@@ -70,7 +70,7 @@ jobs:
   - name: db-migrate
     kind: PRE_DEPLOY
     github:
-      repo: hugocorbucci/mars-demo-db
+      repo: mars-demo-app/mars-demo-db
       branch: main
       deploy_on_push: true
     environment_slug: node-js

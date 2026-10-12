@@ -8,7 +8,7 @@ Region: **tor** (App Platform slug; datacenter tor1)
 ## Clone
 
 ```bash
-git clone --recurse-submodules https://github.com/hugocorbucci/mars-demo-app.git
+git clone --recurse-submodules https://github.com/mars-demo-app/mars-demo-app.git
 cd mars-demo-app
 # or later: make submodules
 ```
@@ -87,6 +87,6 @@ Child → parent dispatch needs secret **`PARENT_DISPATCH_TOKEN`**. Without it, 
 
 ## Component repos
 
-- https://github.com/hugocorbucci/mars-demo-ui
-- https://github.com/hugocorbucci/mars-demo-api
-- https://github.com/hugocorbucci/mars-demo-db
+- https://github.com/mars-demo-app/mars-demo-ui
+- https://github.com/mars-demo-app/mars-demo-api
+- https://github.com/mars-demo-app/mars-demo-db
