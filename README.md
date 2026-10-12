@@ -3,7 +3,7 @@
 Parent repository for the **Mars Demo Shop** DigitalOcean App Platform demo (MARS acceptance scenarios).
 
 App Platform app name: `mars-demo`  
-Region: **tor1** (demo pipelines)
+Region: **tor** (App Platform slug; datacenter tor1) (demo pipelines)
 
 ## Layout
 

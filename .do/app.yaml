@@ -2,7 +2,7 @@
 # Source: .do/base.yaml + components/*/.do/component.yaml
 # Regenerate: npm run compose
 name: mars-demo
-region: tor1
+region: tor
 features:
   - buildpack-stack=ubuntu-22
 alerts:

@@ -2,9 +2,9 @@
 # Component fragments live in submodule repos under components/*/ .do/component.yaml
 # and are merged by scripts/compose-app-spec.mjs into .do/app.yaml.
 #
-# Region: tor1 — demo AIDP/MARS pipelines are set up for Toronto.
+# Region slug: tor (Toronto). App Platform data center: tor1 — demo AIDP/MARS pipelines.
 name: mars-demo
-region: tor1
+region: tor
 features:
   - buildpack-stack=ubuntu-22
 alerts:
