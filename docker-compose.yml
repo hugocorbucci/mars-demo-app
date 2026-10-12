@@ -1,0 +1,21 @@
+# Local Postgres for Mars Demo Shop (Make UX: `make db-up`).
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mars-demo-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: mars
+      POSTGRES_PASSWORD: mars
+      POSTGRES_DB: mars_demo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mars -d mars_demo"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    volumes:
+      - mars-demo-pg:/var/lib/postgresql/data
+
+volumes:
+  mars-demo-pg:
