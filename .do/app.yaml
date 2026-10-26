@@ -63,7 +63,7 @@ services:
       - key: DATABASE_URL
         scope: RUN_TIME
         value: ${db.DATABASE_URL}
-      - key: DEMO_CRASH_AFTER_REQUESTS
+      - key: DEMO_COMPUTE_ACTION_AFTER
         scope: RUN_TIME
         value: '0'
       - key: DEMO_HANDLER_DELAY_MS

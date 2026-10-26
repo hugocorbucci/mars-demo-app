@@ -73,14 +73,14 @@ migrate: ## Apply mars-demo-db migrations (needs db-up / DATABASE_URL)
 	cd $(DB) && npm install --silent
 	cd $(DB) && DATABASE_URL="$(DATABASE_URL)" PGSSL="$(PGSSL)" npm run migrate
 
-seed: ## Seed ~80k orders for missing-index congestion demo (local DB)
+seed: ## Seed ~80k sample orders (local DB)
 	cd $(DB) && npm install --silent
 	cd $(DB) && DATABASE_URL="$(DATABASE_URL)" PGSSL="$(PGSSL)" COUNT="$${COUNT:-80000}" npm run seed
 
-stress-lookup: ## Hammer unindexed by-email (API_URL=… N=40)
+stress-lookup: ## Concurrent by-email lookups (API_URL=… N=40)
 	node $(ROOT)/scripts/stress-lookup.mjs
 
-stress-api: ## Concurrent creates for scale demo (API_URL=… N=40)
+stress-api: ## Concurrent order creates (API_URL=… N=40)
 	node $(ROOT)/scripts/stress-api.mjs
 
 api: ## Run API on :$(PORT) (foreground)

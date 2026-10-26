@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Concurrent hammer of unindexed GET /api/orders/by-email. */
+/** Concurrent GET /api/orders/by-email load. */
 const base = process.env.API_URL || "http://127.0.0.1:8080";
 const email = process.env.HOTPATH_EMAIL || "hotpath@example.com";
 const n = Number(process.env.N || 40);
